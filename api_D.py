@@ -1,10 +1,21 @@
-from flask import Flask, Response, request, json
+from flask import Flask, Response, request, json, send_file
 from flask_cors import CORS
 import time
+import os
 
+# app = Flask(__name__, static_url_path='/static')
 app = Flask(__name__)
 cors = CORS(app)
 DB = "dbdata.json"
+
+# rota para acessar as imagem na api
+@app.route('/imagens/<path:filename>')
+def get_image(filename):
+    # unindo o path das imagens com o nome da imagem
+    image_path = f"data/imagens/{filename}"
+
+    # retorna a imagem como um arquivo
+    return send_file(image_path, mimetype='images/jpeg') # especifique o mimetype correto para sua imagem
 
 def generateId():
     # pegando a data e hora em formato timestamp (migrosegundos)
@@ -78,20 +89,13 @@ def incluir_novo_produto():
 
     # pegando os dados do produtos que veio no body da requisição
     novo_produto = {
+        'id': generateId(), #gerando e adicionado um novo id para produto
         'nome': request.form.get('nome'),
         'autor': request.form.get('autor'),
         'descricao': request.form.get('descricao'),
         'data': request.form.get('data'),
+        'imagem': upload() # fazendo o upload e recebendo o path
     }
-
-    print(novo_produto)
-
-    # gerando e adicionado um novo id para o produto
-    novo_produto['id'] = generateId()
-
-    filename = upload()
-
-    novo_produto['imagem'] = filename
 
     # adicionado o novo produto na lista de produtos
     produtos.append(novo_produto)
@@ -136,17 +140,28 @@ def excluir_produto(id):
         return Response(response=json.dumps(True), status=200,  mimetype="text/plain")
     
 def upload():
-    if 'file' not in request.files:
+    # criando variavel path com o caminho da pasta de imagens
+    path = 'data/imagens/'
+
+    # verificando se a pasta existe, caso não, criar a pasta
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    # verificando se o arquivo chamado "imagem" esta presente nos arquivos da requisição
+    if 'imagem' not in request.files:
         return 'Nenhum arquivo enviado'
     
-    file = request.files['file']
+    # salvando na variavel file o arquivo de imagem 
+    file = request.files['imagem']
     
+    # verificando se o arquivo de imagem possui um nome
     if file.filename == '':
         return 'Nome de arquivo inválido'
     
-    # Salve o arquivo em algum lugar
-    file.save(file.filename)
-    print(file.filename)
+    # salvando o arquivo na pasta configurada em path + nome do arquivo de file.filename
+    file.save(path + file.filename)
+
+    # retornado o nome do arquivo
     return file.filename
 
 app.run(port=4000,host='localhost', debug=True)
