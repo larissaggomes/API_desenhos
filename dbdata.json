@@ -1,10 +1,42 @@
 [
     {
-        "autor": "a",
-        "data": "a",
-        "descricao": "a",
-        "id": "17129474407038815",
-        "imagem": "Meninas_superpoderosas.webp",
-        "nome": "a"
+        "autor": "Craig McCracken",
+        "data": "1998",
+        "descricao": "meninas com poderes salvam a cidade dos viloes",
+        "id": "17129569155039577",
+        "imagem": "17129569155061295.webp",
+        "nome": "as meninas superpoderosas"
+    },
+    {
+        "autor": "Craig McCracken",
+        "data": "2004",
+        "descricao": "mansao para amigos imaginarios morar",
+        "id": "17129572453199801",
+        "imagem": "171295724532198.jpg",
+        "nome": "a mansao foster para amigos imaginarios"
+    },
+    {
+        "autor": "Genndy Tartakovsky",
+        "data": "1995",
+        "descricao": "um garoto genio com uma irma chata que atrapalha ele",
+        "id": "1712957364385517",
+        "imagem": "17129573643875172.webp",
+        "nome": "o laboratorio de dexter"
+    },
+    {
+        "autor": "Butch Hartman",
+        "data": "2001",
+        "descricao": "crianca com padrinhos que realizan os desejos",
+        "id": "17129574831683927",
+        "imagem": "17129574831703942.jpg",
+        "nome": "os padrinhos magicos"
+    },
+    {
+        "autor": "Craig McCracken",
+        "data": "2021",
+        "descricao": "crian\u00e7a com amigos que decidem se tornar herois",
+        "id": "17129576900493689",
+        "imagem": "17129576900513692.jpg",
+        "nome": "kid cosmic"
     }
 ]

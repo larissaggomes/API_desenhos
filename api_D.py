@@ -66,19 +66,24 @@ def obter_produto_por_id(id):
 #editar
 @app.route('/produtos/<int:id>',methods=['PUT'])
 def editar_produto_por_id(id):
-    produto_alterado = request.get_json()
     resultado = ler()
     for produto in resultado:
         if int(produto["id"]) == int(id):
-            produto["nome"] = produto_alterado["nome"]
-            produto["autor"] = produto_alterado["autor"] 
-            produto["descricao"] = produto_alterado["descricao"]
-            produto["data"] = produto_alterado["data"]
+            produto["nome"] = request.form.get('nome')
+            produto["autor"] = request.form.get('autor') 
+            produto["descricao"] =  request.form.get('descricao')
+            produto["data"] = request.form.get('data')
+            if 'imagem' in request.files:
+                os.remove(f"data/imagens/{produto['imagem']}")
+                produto["imagem"] = upload()
+
     json_objeto = json.dumps(resultado, indent=4)
 
     with open(DB, "w") as arquivo:
         arquivo.write(json_objeto)
-        return produto_alterado
+        return Response(
+            response=json.dumps(True), status=200, mimetype="text/plain"
+        ) 
     
 #criar 
 @app.route('/produtos',methods=['POST'])    
@@ -124,7 +129,7 @@ def excluir_produto(id):
         # comparando se o id do banco é igual
         # ao id enviando pela reguisição
         if int(produto["id"]) == int(id):
-
+            os.remove(f"data/imagens/{produto['imagem']}")
             # removendo o produto da lista a partir do indice (posição)
             del produtos[indice]
 
@@ -153,15 +158,14 @@ def upload():
     
     # salvando na variavel file o arquivo de imagem 
     file = request.files['imagem']
-    
-    # verificando se o arquivo de imagem possui um nome
-    if file.filename == '':
-        return 'Nome de arquivo inválido'
-    
+    split = file.filename.split('.') 
+    ext = split[-1]
+    name = f"{generateId()}.{ext}"
+
     # salvando o arquivo na pasta configurada em path + nome do arquivo de file.filename
-    file.save(path + file.filename)
+    file.save(f"{path}{name}")
 
     # retornado o nome do arquivo
-    return file.filename
+    return name
 
 app.run(port=4000,host='localhost', debug=True)
